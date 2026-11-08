@@ -9,7 +9,7 @@ import {
 } from "remotion";
 import { Audio } from "@remotion/media";
 import { TIMING } from "./timeline";
-import { BannerLayer, DebrisLayer, KartLayer } from "./layers/MotionScene";
+import { BannerLayer, DebrisLayer, FlapsLayer, KartLayer } from "./layers/MotionScene";
 
 export type TeaserProps = {
   openingMusic: string;
@@ -24,10 +24,17 @@ export const EmaKartTeaser = ({
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
       <Sequence
-        name="Outdoor • revelação e rasgo"
+        name="Banner de papel • revelação, estufamento e buraco"
         durationInFrames={TIMING.black * fps}
       >
         <BannerLayer />
+      </Sequence>
+      <Sequence
+        name="Papel • abas dobrando para a câmera"
+        from={TIMING.rupture * fps}
+        durationInFrames={Math.round((TIMING.black - TIMING.rupture) * fps)}
+      >
+        <FlapsLayer />
       </Sequence>
       <Sequence
         name="Moema • ruptura e aproximação frontal"
@@ -37,7 +44,7 @@ export const EmaKartTeaser = ({
         <KartLayer />
       </Sequence>
       <Sequence
-        name="Lona • abas e fragmentos em profundidade"
+        name="Papel • tiras que tremulam e caem"
         from={TIMING.rupture * fps}
         durationInFrames={Math.round((TIMING.black - TIMING.rupture) * fps)}
       >
@@ -53,13 +60,7 @@ export const EmaKartTeaser = ({
         />
       ) : null}
       <Audio
-        name="Kart • partida forte, ignição e primeira acelerada"
-        src={staticFile("audio/teaser-startup.wav")}
-        from={TIMING.engine * fps}
-        durationInFrames={1.1 * fps}
-      />
-      <Audio
-        name="Kart • distante até máxima rotação"
+        name="Kart • ao fundo, vindo de longe até máxima rotação"
         src={staticFile("audio/teaser-engine.wav")}
         from={TIMING.engine * fps}
         durationInFrames={Math.round((TIMING.black - TIMING.engine) * fps)}
@@ -71,13 +72,19 @@ export const EmaKartTeaser = ({
         durationInFrames={Math.round((TIMING.black - TIMING.wind) * fps)}
       />
       <Audio
-        name="Ruptura • impacto grave"
+        name="Papel • esticando antes de rasgar"
+        src={staticFile("audio/teaser-stretch.wav")}
+        from={TIMING.bulge * fps}
+        durationInFrames={Math.round((TIMING.rupture - TIMING.bulge) * fps)}
+      />
+      <Audio
+        name="Papel • estouro abafado do rasgo"
         src={staticFile("audio/teaser-impact.wav")}
         from={TIMING.rupture * fps}
         durationInFrames={0.8 * fps}
       />
       <Audio
-        name="Lona • rasgo e fragmentos"
+        name="Papel • rasgo, abas e tiras"
         src={staticFile("audio/teaser-tear.wav")}
         from={TIMING.rupture * fps}
         durationInFrames={1.5 * fps}
@@ -104,10 +111,10 @@ const OpeningMusic = ({ openingMusic, musicStartSeconds }: TeaserProps) => {
         [
           TIMING.fadeStart * fps,
           TIMING.revealed * fps,
-          TIMING.engine * fps,
+          TIMING.musicDuckStart * fps,
           TIMING.musicDuckEnd * fps,
         ],
-        [0, 0.72, 0.72, 0.25],
+        [0, 0.72, 0.72, 0.3],
         {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
