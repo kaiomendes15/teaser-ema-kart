@@ -1,7 +1,7 @@
 """Deterministic 48 kHz stereo design; preserves the original supplied assets.
 
-Engine and startup start at 3.35 s, wind at 3.60 s, impact and tear at 5.15 s.
-All audio must be unmounted at 7.50 seconds: the collision cut is silent.
+Engine and startup start at 5.35 s, wind at 5.60 s, impact and tear at 7.15 s.
+All audio must be unmounted at 8.45 seconds: the collision cut is silent.
 """
 from pathlib import Path
 import math
@@ -39,7 +39,7 @@ cursor = 0
 
 def engine(t):
     global phase, low_noise, exhaust_filter, cursor
-    p = t / 4.15
+    p = t / 3.1
     # Combustion frequency climbs from distant idle into a high kart whine.
     hz = 46 + 180 * p ** 1.28 + 4 * math.sin(t * 7) * p
     phase += math.tau * hz / SR
@@ -61,21 +61,21 @@ def engine(t):
     return value * (1 - spread) + delayed * spread, value * (1 - spread * 1.5) + delayed * spread * 1.5
 
 
-write('engine', 4.15, engine)
+write('engine', 3.1, engine)
 wind_l = 0
 wind_r = 0
 
 
 def wind(t):
     global wind_l, wind_r
-    p = t / 3.9
+    p = t / 2.85
     wind_l += .10 * (random.uniform(-1, 1) - wind_l)
     wind_r += .10 * (random.uniform(-1, 1) - wind_r)
     envelope = .005 * p + .29 * p ** 4.5
     return wind_l * envelope, wind_r * envelope
 
 
-write('wind', 3.9, wind)
+write('wind', 2.85, wind)
 impact_low = 0
 
 

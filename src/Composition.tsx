@@ -9,7 +9,13 @@ import {
 } from "remotion";
 import { Audio } from "@remotion/media";
 import { TIMING } from "./timeline";
-import { BannerLayer, DebrisLayer, KartLayer } from "./layers/MotionScene";
+import { Sponsors } from "./layers/Sponsors";
+import {
+  AccelerationLayer,
+  BannerLayer,
+  DebrisLayer,
+  KartLayer,
+} from "./layers/MotionScene";
 
 export type TeaserProps = {
   openingMusic: string;
@@ -30,6 +36,13 @@ export const EmaKartTeaser = ({
         <BannerLayer />
       </Sequence>
       <Sequence
+        name="Aceleração • fumaça traseira e rastros de velocidade"
+        from={TIMING.rupture * fps}
+        durationInFrames={Math.round((TIMING.black - TIMING.rupture) * fps)}
+      >
+        <AccelerationLayer />
+      </Sequence>
+      <Sequence
         name="Moema • ruptura e aproximação frontal"
         from={TIMING.rupture * fps}
         durationInFrames={Math.round((TIMING.black - TIMING.rupture) * fps)}
@@ -45,6 +58,13 @@ export const EmaKartTeaser = ({
       </Sequence>
       <Sequence name="Preto absoluto e silêncio" from={TIMING.black * fps}>
         <AbsoluteFill style={{ backgroundColor: "#000" }} />
+      </Sequence>
+      <Sequence
+        name="Patrocínios"
+        from={TIMING.sponsors * fps}
+        durationInFrames={Math.round((TIMING.duration - TIMING.sponsors) * fps)}
+      >
+        <Sponsors />
       </Sequence>
       {openingMusic ? (
         <OpeningMusic
@@ -80,7 +100,9 @@ export const EmaKartTeaser = ({
         name="Lona • rasgo e fragmentos"
         src={staticFile("audio/teaser-tear.wav")}
         from={TIMING.rupture * fps}
-        durationInFrames={1.5 * fps}
+        durationInFrames={Math.round(
+          Math.min(1.5, TIMING.black - TIMING.rupture) * fps,
+        )}
       />
     </AbsoluteFill>
   );
@@ -92,22 +114,22 @@ const OpeningMusic = ({ openingMusic, musicStartSeconds }: TeaserProps) => {
   const { fps } = useVideoConfig();
   return (
     <Audio
-      name="GTA VI • início original e volume reduzido sob o motor"
+      name="GTA VI • entrada suave antes do banner e redução sob o motor"
       src={
         /^https?:/.test(openingMusic) ? openingMusic : staticFile(openingMusic)
       }
       trimBefore={Math.round(musicStartSeconds * fps)}
-      from={TIMING.fadeStart * fps}
-      durationInFrames={Math.round((TIMING.black - TIMING.fadeStart) * fps)}
+      from={TIMING.musicStart * fps}
+      durationInFrames={Math.round((TIMING.black - TIMING.musicStart) * fps)}
       volume={interpolate(
         frame,
         [
-          TIMING.fadeStart * fps,
+          TIMING.musicStart * fps,
           TIMING.revealed * fps,
           TIMING.engine * fps,
           TIMING.musicDuckEnd * fps,
         ],
-        [0, 0.72, 0.72, 0.25],
+        [0.05, 0.72, 0.72, 0.25],
         {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",

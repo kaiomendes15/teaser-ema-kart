@@ -113,7 +113,7 @@ export const BannerLayer = () => {
 // and emblem are preserved; no generated character or replacement logo.
 const kartPose = (elapsed: number) => {
   const p = Math.max(0, Math.min(1, elapsed / (TIMING.black - TIMING.rupture)));
-  const distance = 1 - 0.975 * Math.pow(p, 1.65);
+  const distance = 1 - 0.975 * Math.pow(p, 1.2);
   return {
     width: 900 / distance,
     emblemY: 700 - 160 * Math.pow(p, 1.8),
@@ -205,6 +205,81 @@ export const DebrisLayer = () => {
               }}
             />
           </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+// Emissions stay where the rear wheels were when released. As the kart comes
+// forward, older clouds expand and drift outward behind it instead of sticking
+// to its nose. This layer is occluded by the character in the composition.
+export const AccelerationLayer = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+  const speedTime = t * (2.35 / (TIMING.black - TIMING.rupture));
+  return (
+    <AbsoluteFill>
+      <CanvasImage
+        src={staticFile(ASSETS.speed2)}
+        style={{
+          position: "absolute",
+          width: 1920,
+          height: 1080,
+          opacity: interpolate(
+            speedTime,
+            [0, 0.18, 0.8, 1.35],
+            [0, 0.28, 0.34, 0],
+            clamp,
+          ),
+          scale: interpolate(speedTime, [0, 1.35], [0.85, 1.6], clamp),
+          transformOrigin: "50% 61%",
+        }}
+      />
+      <CanvasImage
+        src={staticFile(ASSETS.speed3)}
+        style={{
+          position: "absolute",
+          width: 1920,
+          height: 1080,
+          opacity: interpolate(
+            speedTime,
+            [0.45, 1.1, 1.8, 2.35],
+            [0, 0.42, 0.55, 0.22],
+            clamp,
+          ),
+          scale: interpolate(speedTime, [0.45, 2.35], [0.9, 1.8], clamp),
+          transformOrigin: "50% 61%",
+        }}
+      />
+      {Array.from({ length: 13 }, (_, i) => {
+        const emission = i * 0.14;
+        const age = t - emission;
+        if (age < 0 || age > 1.05) return null;
+        const rear = kartPose(emission);
+        const size = rear.width * (1.15 + age * 1.25);
+        const rearY = rear.emblemY - rear.width * (50 / 1448);
+        return (
+          <CanvasImage
+            key={i}
+            src={staticFile(ASSETS.smoke)}
+            style={{
+              position: "absolute",
+              width: size,
+              height: size,
+              left: CX - size / 2 + Math.sin(i * 2.4) * age * 35,
+              top: rearY - size * 0.62 - age * 85,
+              opacity: interpolate(
+                age,
+                [0, 0.08, 0.28, 1.05],
+                [0, 0.42, 0.36, 0],
+                clamp,
+              ),
+              rotate: `${Math.sin(i * 2.4) * age * 7}deg`,
+              filter: `blur(${0.5 + age * 3}px)`,
+            }}
+          />
         );
       })}
     </AbsoluteFill>

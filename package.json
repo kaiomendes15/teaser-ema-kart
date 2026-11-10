@@ -29,7 +29,8 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "render": "remotion render src/index.ts EmaKartTeaser out/EmaKartTeaser.mp4 --codec=h264 --pixel-format=yuv420p"
+    "render": "remotion render src/index.ts EmaKartTeaser out/EmaKartTeaser.mp4 --codec=h264 --pixel-format=yuv420p",
+    "render:comic": "remotion render src/index.ts DesafioUniforHQ out/DesafioUniforHQ.mp4 --codec=h264 --pixel-format=yuv420p"
   },
   "allowScripts": {
     "esbuild": false

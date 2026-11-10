@@ -10,4 +10,5 @@ export const ASSETS = {
   speed1: "components/efeitos/velocidade/efeito-nivel1.png",
   speed2: "components/efeitos/velocidade/efeito-nivel2.png",
   speed3: "components/efeitos/velocidade/efeito-nivel3.png",
+  smoke: "components/efeitos/velocidade/efeito-fumaca-kart.png",
 } as const;
