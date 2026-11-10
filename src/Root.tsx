@@ -1,6 +1,7 @@
 import { Composition, Folder } from "remotion";
 import { EmaKartTeaser } from "./Composition";
 import { ComicTeaser } from "./comic/ComicTeaser";
+import { EmaKartShowcase } from "./showcase/Showcase";
 export const RemotionRoot = () => (
   <>
     <Folder name="Introducao">
@@ -27,5 +28,20 @@ export const RemotionRoot = () => (
         height={1080}
       />
     </Folder>
+    <Composition
+      id="EmaKartShowcase"
+      component={EmaKartShowcase}
+      durationInFrames={3663}
+      fps={60}
+      width={1920}
+      height={1080}
+      defaultProps={{
+        openingAudio: "audio/Cars - Tuner Scene but in 4K.mp3",
+        openingAudioStartSeconds: 0,
+        showcaseMusic: "",
+        showcaseMusicStartSeconds: 0,
+        showTitles: true,
+      }}
+    />
   </>
 );
