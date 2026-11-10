@@ -1,5 +1,8 @@
 # Moema — teaser do kart
 
+O showcase de funcionalidades tem uma composição independente, `EmaKartShowcase`.
+Veja [SHOWCASE.md](SHOWCASE.md) para a sequência, a prévia e os controles de edição.
+
 Composição `EmaKartTeaser`: **8 segundos, 1920 × 1080 (16:9), 60 FPS, 480 quadros**.
 
 ## Prévia
