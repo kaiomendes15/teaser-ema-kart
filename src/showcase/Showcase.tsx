@@ -1,6 +1,8 @@
 import { Audio, Video } from "@remotion/media";
 import {
   AbsoluteFill,
+  CanvasImage,
+  Easing,
   Interactive,
   interpolate,
   Sequence,
@@ -17,6 +19,7 @@ export type ShowcaseProps = {
   showcaseMusic: string;
   showcaseMusicStartSeconds: number;
   showTitles: boolean;
+  openingFade?: boolean;
 };
 
 // 60 fps edit. Opening cuts follow measured transients of the supplied soundtrack.
@@ -326,7 +329,14 @@ export const EmaKartShowcase = (props: ShowcaseProps) => {
           </Sequence>
         </Track>
       ) : null}
-      <OpeningFade />
+      {props.openingFade !== false ? <OpeningFade /> : null}
+      <Sequence
+        name="Elenco · saída suave para a logo"
+        from={3465}
+        durationInFrames={18}
+      >
+        <ClosingFade />
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -340,35 +350,54 @@ const ShowcaseAudio = ({
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   return (
-    <Track name="Trilha · abertura e música futura">
-      {openingAudio ? (
-        <Audio
-          name="Cars · áudio original enviado"
-          src={staticFile(openingAudio)}
-          trimBefore={Math.round(openingAudioStartSeconds * fps)}
-          durationInFrames={1293}
-          volume={interpolate(frame, [0, 6, 1254, 1293], [0, 1, 1, 0], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          })}
-        />
-      ) : null}
-      {showcaseMusic ? (
-        <Audio
-          name="Showcase · trilha a escolher"
-          src={staticFile(showcaseMusic)}
-          from={1293}
-          trimBefore={Math.round(showcaseMusicStartSeconds * fps)}
-          durationInFrames={durationInFrames - 1293}
-          volume={interpolate(
-            frame,
-            [1293, 1305, durationInFrames - 45, durationInFrames - 1],
-            [0, 0.85, 0.85, 0],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          )}
-        />
-      ) : null}
-    </Track>
+    <>
+      <Track name="Trilha · Cars">
+        {openingAudio ? (
+          <Audio
+            name="Cars · áudio original enviado"
+            src={staticFile(openingAudio)}
+            trimBefore={Math.round(openingAudioStartSeconds * fps)}
+            durationInFrames={Math.round(23.72 * fps)}
+            volume={interpolate(
+              frame,
+              [0, 6, Math.round(21.32 * fps), Math.round(23.72 * fps)],
+              [0, 1, 1, 0],
+              {
+                easing: Easing.inOut(Easing.cubic),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            )}
+          />
+        ) : null}
+      </Track>
+      <Track name="Trilha · Cloudtop Cruise">
+        {showcaseMusic ? (
+          <Audio
+            name="Showcase · Cloudtop Cruise · Frontrunning"
+            src={staticFile(showcaseMusic)}
+            from={Math.round(21.32 * fps)}
+            trimBefore={Math.round(showcaseMusicStartSeconds * fps)}
+            durationInFrames={durationInFrames - Math.round(21.32 * fps)}
+            volume={interpolate(
+              frame,
+              [
+                Math.round(21.32 * fps),
+                Math.round(23.72 * fps),
+                durationInFrames - Math.round(1.5 * fps),
+                durationInFrames - 1,
+              ],
+              [0, 0.5, 0.5, 0],
+              {
+                easing: Easing.inOut(Easing.cubic),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            )}
+          />
+        ) : null}
+      </Track>
+    </>
   );
 };
 
@@ -430,45 +459,40 @@ const EndCard = () => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#080b0e",
+        backgroundColor: "#000",
       }}
     >
-      <div
+      <CanvasImage
+        name="Logo oficial · Ema Kart · Lendas da Unifor"
+        src={staticFile("components/logos/emakart-lendas-da-unifor-logo.png")}
         style={{
-          width: 100,
-          height: 6,
-          backgroundColor: "#b8ed69",
-          marginBottom: 30,
-          opacity: interpolate(frame, [0, 15, 150, 179], [0, 1, 1, 0]),
+          width: 1200,
+          height: 840,
+          objectFit: "contain",
+          opacity: interpolate(frame, [0, 36, 90, 179], [0, 1, 1, 0], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+            easing: Easing.inOut(Easing.cubic),
+          }),
         }}
       />
-      <Interactive.Div
-        name="Nome do jogo"
-        style={{
-          fontFamily: "Arial, sans-serif",
-          fontStyle: "italic",
-          fontSize: 160,
-          fontWeight: 900,
-          letterSpacing: -6,
-          color: "white",
-          opacity: interpolate(frame, [0, 15, 150, 179], [0, 1, 1, 0]),
-        }}
-      >
-        EMA KART
-      </Interactive.Div>
-      <Interactive.Div
-        name="Assinatura do showcase"
-        style={{
-          fontFamily: "Arial, sans-serif",
-          fontSize: 34,
-          letterSpacing: 10,
-          marginTop: 22,
-          color: "#b8ed69",
-          opacity: interpolate(frame, [0, 15, 150, 179], [0, 1, 1, 0]),
-        }}
-      >
-        FOLCLORE EM ALTA VELOCIDADE
-      </Interactive.Div>
     </AbsoluteFill>
+  );
+};
+
+const ClosingFade = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: "#000",
+        pointerEvents: "none",
+        opacity: interpolate(frame, [0, 17], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+          easing: Easing.inOut(Easing.cubic),
+        }),
+      }}
+    />
   );
 };

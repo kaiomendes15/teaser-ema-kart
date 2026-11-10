@@ -20,11 +20,13 @@ import {
 export type TeaserProps = {
   openingMusic: string;
   musicStartSeconds: number;
+  soundEffectsVolume?: number;
 };
 
 export const EmaKartTeaser = ({
   openingMusic,
   musicStartSeconds,
+  soundEffectsVolume = 1,
 }: TeaserProps) => {
   const { fps } = useVideoConfig();
   return (
@@ -75,30 +77,35 @@ export const EmaKartTeaser = ({
       <Audio
         name="Kart • partida forte, ignição e primeira acelerada"
         src={staticFile("audio/teaser-startup.wav")}
+        volume={soundEffectsVolume}
         from={TIMING.engine * fps}
         durationInFrames={1.1 * fps}
       />
       <Audio
         name="Kart • distante até máxima rotação"
         src={staticFile("audio/teaser-engine.wav")}
+        volume={soundEffectsVolume}
         from={TIMING.engine * fps}
         durationInFrames={Math.round((TIMING.black - TIMING.engine) * fps)}
       />
       <Audio
         name="Ar • aproximação estéreo"
         src={staticFile("audio/teaser-wind.wav")}
+        volume={soundEffectsVolume}
         from={TIMING.wind * fps}
         durationInFrames={Math.round((TIMING.black - TIMING.wind) * fps)}
       />
       <Audio
         name="Ruptura • impacto grave"
         src={staticFile("audio/teaser-impact.wav")}
+        volume={soundEffectsVolume}
         from={TIMING.rupture * fps}
         durationInFrames={0.8 * fps}
       />
       <Audio
         name="Lona • rasgo e fragmentos"
         src={staticFile("audio/teaser-tear.wav")}
+        volume={soundEffectsVolume}
         from={TIMING.rupture * fps}
         durationInFrames={Math.round(
           Math.min(1.5, TIMING.black - TIMING.rupture) * fps,

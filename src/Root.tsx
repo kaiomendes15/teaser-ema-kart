@@ -2,8 +2,19 @@ import { Composition, Folder } from "remotion";
 import { EmaKartTeaser } from "./Composition";
 import { ComicTeaser } from "./comic/ComicTeaser";
 import { EmaKartShowcase } from "./showcase/Showcase";
+import { EmaKartTrailer } from "./trailer/EmaKartTrailer";
 export const RemotionRoot = () => (
   <>
+    <Folder name="Trailer-completo">
+      <Composition
+        id="EmaKartTrailer"
+        component={EmaKartTrailer}
+        durationInFrames={5493}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+    </Folder>
     <Folder name="Introducao">
       <Composition
         id="EmaKartTeaser"
@@ -38,8 +49,9 @@ export const RemotionRoot = () => (
       defaultProps={{
         openingAudio: "audio/Cars - Tuner Scene but in 4K.mp3",
         openingAudioStartSeconds: 0,
-        showcaseMusic: "",
-        showcaseMusicStartSeconds: 0,
+        showcaseMusic:
+          "audio/sountrack/U Cloudtop Cruise (Thundercloud, Frontrunning) - Mario Kart 8 Deluxe OST.mp3",
+        showcaseMusicStartSeconds: 41.983333333333334,
         showTitles: true,
       }}
     />

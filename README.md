@@ -4,6 +4,7 @@ Composição `EmaKartTeaser`: **26 segundos, 1920 × 1080 (16:9), 60 FPS, 1560 q
 
 ## Composições no Studio
 
+- `Trailer-completo / EmaKartTrailer`: montagem completa com animação, título, patrocínios, teaser e showcase, em 91,55 s. [Estrutura e transições](src/trailer/README.md).
 - `Introducao / EmaKartTeaser`: teaser do kart existente, com sua montagem preservada.
 - `Historia-em-quadrinhos / DesafioUniforHQ`: novo motion comic independente, 24 s em 1080p/60 FPS. [Detalhes e edição](src/comic/README.md).
 
